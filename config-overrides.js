@@ -1,7 +1,8 @@
  const {
      override,
      fixBabelImports,
-     addLessLoader
+     addLessLoader,
+     addDecoratorsLegacy
  } = require('customize-cra');
 
  module.exports = override(
@@ -17,4 +18,5 @@
              '@primary-color': '#1DA57A'
          },
      }),
+     addDecoratorsLegacy()
  );
