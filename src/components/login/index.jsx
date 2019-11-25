@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Icon } from "antd";
+import { Form, Input, Button, Icon} from "antd";
+import { reqLogin } from '../../api';
 import logo from './logo.png';
 import "./index.less";
 
+
 const { Item } = Form;
 
-// @Form.create()
+@Form.create()
 class Login extends Component {
         validator = (rule, value, callback) => {
             if (!value){
@@ -20,6 +22,23 @@ class Login extends Component {
                 callback();
             }
         };
+
+        login = e => {
+           e.preventDefault();
+           this.props.form.validateFields((err,values) => {
+               if (!err) { 
+                   const { username, password } =values;
+                   reqLogin(username, password)
+                   .then(response => {
+                      this.props.history.push("/");
+                   })
+                   .catch(err => {
+                       this.props.form.resetFields(["password"]);
+                   });
+               }
+           });
+        };
+
         render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -30,7 +49,7 @@ class Login extends Component {
                 </header>
                 <section className="login-section">
                     <h3>用户登录</h3>
-                    <Form>
+                    <Form onSubmit={this.login}>
                         <Item>
                         {getFieldDecorator("username",{
                             rules:[ { required:true,message: "请输入用户名" },
@@ -65,7 +84,7 @@ class Login extends Component {
                                 }
                         </Item>
                         <Item>
-                        <Button type="primary" className="login-btn">登录</Button>
+                        <Button type="primary" className="login-btn" htmlType="submit">登录</Button>
                         </Item>
                         
                     </Form>
