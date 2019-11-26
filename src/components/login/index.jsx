@@ -10,6 +10,8 @@ const { Item } = Form;
 @Form.create()
 class Login extends Component {
         validator = (rule, value, callback) => {
+            
+
             if (!value){
                 callback("请输入密码");                                                          
             }else if(value.length < 4){
