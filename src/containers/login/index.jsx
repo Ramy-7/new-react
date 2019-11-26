@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Icon} from "antd";
-import { reqLogin } from '../../api';
+import { connect } from "react-redux"
+import { getUserAsync } from "../../redux/action-creators/user";
 import logo from './logo.png';
 import "./index.less";
 
 
+
 const { Item } = Form;
 
+@connect(null, {getUserAsync})
 @Form.create()
 class Login extends Component {
         validator = (rule, value, callback) => {
@@ -27,10 +30,12 @@ class Login extends Component {
 
         login = e => {
            e.preventDefault();
-           this.props.form.validateFields((err,values) => {
+           const { form } = this.props
+           form.validateFields((err,values) => {
                if (!err) { 
                    const { username, password } =values;
-                   reqLogin(username, password)
+                   this.props
+                   .getUserAsync(username, password)
                    .then(response => {
                       this.props.history.push("/");
                    })
@@ -96,6 +101,8 @@ class Login extends Component {
         )
     }
 }
+
+
 
 
 export default Login;
