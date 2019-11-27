@@ -1,23 +1,40 @@
+import React, { Component } from "react";
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom'
+
 
 
 const withCheckLogin = WrappedComponent => {
     return connect(
-        (state) => ({token: state.user.token }),
+        state => ({token: state.user.token}),
         null
     )(
-    class extends Component {
+        class extends Component {
+            static displayName = `CheckLogin(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
         render() {
-            const { pathname } = this.props.location;
+            
+            const { 
+                token,
+                location,
+                ...rest 
+            } = this.props;
 
-            if(pathname === '/login'){
-            }else{
+            if(location.pathname === '/login'){
+                if(token){
+                    return <Redirect to="/" /> ;    
+                }    
+            } else {
+                if(!token){
+                    return <Redirect to="/login"/>;
+                }
             }
-            return <WrappedComponent />;
+            return <WrappedComponent {...rest} location={location}/>;
+
         }
     }
-    )
-    return
+    );
 };
+        
+
 
 export default withCheckLogin;
