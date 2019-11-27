@@ -1,5 +1,6 @@
 import axios from "axios";
 import { message } from "antd";
+import store from "../redux/store";
 import codeMessage from "../config/code-message";
 
 const axiosInstance = axios.create({
@@ -21,7 +22,9 @@ axiosInstance.interceptors.request.use(config => {
       .substring(1);
   }
 
-  const token = ""; //???
+  const {
+    user: { token }
+  } = store.getState();
 
   if (token) {
     config.headers.authorization = "Bearer " + token;

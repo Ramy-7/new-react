@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button, Icon} from "antd";
 import { connect } from "react-redux"
 import { getUserAsync } from "../../redux/action-creators/user";
+import { setItem } from '../../utils/storage';
 import logo from './logo.png';
 import "./index.less";
 
@@ -30,13 +31,13 @@ class Login extends Component {
 
         login = e => {
            e.preventDefault();
-           const { form } = this.props
-           form.validateFields((err,values) => {
+           this.props.form.validateFields((err,values) => {
                if (!err) { 
                    const { username, password } =values;
                    this.props
                    .getUserAsync(username, password)
                    .then(response => {
+                       setItem("user",response);
                       this.props.history.push("/");
                    })
                    .catch(err => {
