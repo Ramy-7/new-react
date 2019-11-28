@@ -1,7 +1,16 @@
 import axios from "axios";
-import { message } from "antd";
+import {
+  message
+} from "antd";
 import store from "../redux/store";
 import codeMessage from "../config/code-message";
+import {
+  removeItem
+} from "../utils/storage";
+import history from "../utils/history";
+import {
+  removeUserSuccess
+} from '../redux/action-creators/user'
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:5000/api",
@@ -23,7 +32,9 @@ axiosInstance.interceptors.request.use(config => {
   }
 
   const {
-    user: { token }
+    user: {
+      token
+    }
   } = store.getState();
 
   if (token) {
@@ -34,7 +45,9 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 axiosInstance.interceptors.response.use(
-  ({ data }) => {
+  ({
+    data
+  }) => {
     if (data.status === 0) {
       return data.data;
     } else {
@@ -42,12 +55,17 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(data.msg);
     }
   },
-  error => {
+  (error) => {
     let errorMessage = "";
     // console.log(error)
 
     if (error.response) {
       errorMessage = codeMessage[error.response.status] || "未知错误";
+      if (error.response.status === 401) {
+        removeItem();
+        store.dispatch(removeUserSuccess());
+        history.push('/login');
+      }
     } else {
       if (error.message.indexOf("Network Error") !== -1) {
         errorMessage = "没网";

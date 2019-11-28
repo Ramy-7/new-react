@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { getUserAsync } from "../../redux/action-creators/user";
 import { setItem } from '../../utils/storage';
 import withCheckLogin from '../with-check-login';
-import logo from './logo.png';
+import logo from '../../assets/logo.png';
 import "./index.less";
 
 
